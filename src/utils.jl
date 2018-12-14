@@ -25,6 +25,4 @@ end
     current_millis()
 Return timestamps
 """
-function current_millis()
-    Dates.value(now()) - UNIXEPOCH
-end
+current_millis() = Dates.value(now()) - UNIXEPOCH
