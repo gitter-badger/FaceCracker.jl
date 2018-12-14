@@ -1,3 +1,6 @@
+
+const UNIXEPOCH = Dates.value(DateTime(1970))
+
 """
     is_odd(x::Int) -> Bool
 """
@@ -16,4 +19,12 @@ function list_files(dir::AbstractString=".")
         end
     end
     rs
+end
+
+"""
+    current_millis()
+Return timestamps
+"""
+function current_millis()
+    Dates.value(now()) - UNIXEPOCH
 end
