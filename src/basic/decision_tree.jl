@@ -1,12 +1,12 @@
-export example
-
-
-############################################################
 using ScikitLearn
 using DecisionTree
 using PyPlot
 
-function example()
+
+"""
+	decision_tree()
+"""
+function decision_tree()
 	X = sort(5 * rand(80))
 	XX = reshape(X, 80, 1)
 	y = sin.(X)
@@ -16,5 +16,11 @@ function example()
 	# predict
 	X_test = 0:0.01:5.0
 	y_test = predict(regr, hcat(X_test))
-	X_test, y_test
+	scatter(X, y, c="k", label="data")
+	plot(X_test, y_test, c="r", label="pruning purity threshold=0.05", linewidth=2)
+	xlabel("data")
+	ylabel("target")
+	title("Decision Tree Regression")
+	legend(prop=Dict("size" => 10))
 end
+
