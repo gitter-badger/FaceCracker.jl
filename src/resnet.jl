@@ -54,7 +54,7 @@ end
     Note: the shortcut should have strides=(2, 2)
 Returns block model.
 """
-function conv_block(kernel_size, filters; strides=(2, 2))
+function plain_model(kernel_size, filters; strides=(2, 2))
     filter1, filter2, filter3 = filters
     Chain(
         Conv((1, 1), filter1=>filter1, stride=strides),
@@ -65,9 +65,6 @@ function conv_block(kernel_size, filters; strides=(2, 2))
         x -> relu.(x),
         Conv((1, 1), filter2=>filter3),
         BatchNorm(filter3),
-        Conv((1, 1), filter3=>filter3, stride=strides),
-        BatchNorm(filter3),
-        x -> relu.(x)
     ) |> gpu
 end
 
@@ -75,12 +72,15 @@ struct ConvBlock
     kernel_size::Tuple
     filters::AbstractArray
     strides::Tuple
-    model::Chain
-    ConvBlock(kernel_size, filters; strides=(2, 2)) = new(kernel_size, filters, strides, conv_block(kernel_size, filters, strides=strides))
+    plain::Chain
+    shortcut::Chain
+    ConvBlock(kernel_size, filters; strides=(2, 2)) = new(kernel_size, filters, strides, 
+        plain_model(kernel_size, filters, strides=strides), 
+        Chain(Conv((1, 1), filter[1]=>filters[3], stride=strides), BatchNorm(filters[3])) |> gpu)
 end
 
 function (cb::ConvBlock)(x)
-    cb.model(x)
+    relu.(cb.plain(x) + cb.shortcut(x))
 end
 
 
