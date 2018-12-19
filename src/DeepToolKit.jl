@@ -1,6 +1,6 @@
 module DeepToolKit
 
-export is_odd, decision_tree, list_files, time_millis
+export is_odd, decision_tree, list_files, time_millis, ResNetModel
 
 ############################################################
 include("utils.jl")
