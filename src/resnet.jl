@@ -15,7 +15,7 @@ include("config.jl")
     # Arguments
         kernel_size: defualt 3, the kernel size of middle conv layer at main path
         filters: list of integers, the filterss of 3 conv layer at main path
-Returns Output tensor for the block.
+Returns the block model.
 """
 function identity_block(kernel_size, filters)
     filter1, filter2, filter3 = filters
@@ -52,7 +52,7 @@ end
         kernel_size: the kernel size of middle conv layer at main path
         filters: list of integers, the filterss of 3 conv layer at main path
     Note: the shortcut should have strides=(2, 2)
-Returns Output tensor for the block.
+Returns block model.
 """
 function conv_block(kernel_size, filters; strides=(2, 2))
     filter1, filter2, filter3 = filters
