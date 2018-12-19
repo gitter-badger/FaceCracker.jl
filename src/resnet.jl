@@ -1,8 +1,7 @@
 ###################################################################################################
 #
 # ResNet50 model for Flux
-#   Reference:
-#       - [Deep Residual Learning for Image Recognition](https://arxiv.org/abs/1512.03385)
+#   Reference: [Deep Residual Learning for Image Recognition](https://arxiv.org/pdf/1512.03385.pdf)
 #
 ####################################################################################################
 using Flux
@@ -18,9 +17,9 @@ include("config.jl")
 Returns the block model.
 """
 function identity_block(kernel_size, filters)
-    filter1, filter2, filter3 = filters
+    _, filter1, filter2, filter3 = filters
     Chain(
-        Conv((1, 1), filter1=>filter1), 
+        Conv((1, 1), _=>filter1), 
         BatchNorm(filter1),
         x -> relu.(x),
         Conv(kernel_size, filter1=>filter2, pad=(1, 1)),
@@ -28,7 +27,6 @@ function identity_block(kernel_size, filters)
         x -> relu.(x),
         Conv((1, 1), filter2=>filter3),
         BatchNorm(filter3),
-        x -> relu.(x)
     ) |> gpu
 end
 
@@ -40,7 +38,7 @@ struct IDBlock
 end
 
 function (ib::IDBlock)(x)
-    ib.model(x)
+    relu.(ib.model(x) + x)
 end
 
 
@@ -55,9 +53,9 @@ end
 Returns block model.
 """
 function plain_model(kernel_size, filters; strides=(2, 2))
-    filter1, filter2, filter3 = filters
+    _, filter1, filter2, filter3 = filters
     Chain(
-        Conv((1, 1), filter1=>filter1, stride=strides),
+        Conv((1, 1), _=>filter1, stride=strides),
         BatchNorm(filter1),
         x -> relu.(x),
         Conv(kernel_size, filter1=>filter2, pad=(1, 1)),
@@ -76,7 +74,7 @@ struct ConvBlock
     shortcut::Chain
     ConvBlock(kernel_size, filters; strides=(2, 2)) = new(kernel_size, filters, strides, 
         plain_model(kernel_size, filters, strides=strides), 
-        Chain(Conv((1, 1), filter[1]=>filters[3], stride=strides), BatchNorm(filters[3])) |> gpu)
+        Chain(Conv((1, 1), filter[2]=>filters[4], stride=strides), BatchNorm(filters[4])) |> gpu)
 end
 
 function (cb::ConvBlock)(x)
@@ -108,25 +106,25 @@ ResNetModel = Chain(
     BatchNorm(64),
     x -> relu.(x),
     x -> maxpool(x, (3, 3); stride=(2, 2)),
-    ConvBlock((3, 3), [64, 64, 256], strides=(1, 1)),
-    IDBlock((3, 3), [64, 64, 256]),
-    IDBlock((3, 3), [64, 64, 256]),
-    ConvBlock((3, 3), [128, 128, 512]),
-    IDBlock((3, 3), [128, 128, 512]),
-    IDBlock((3, 3), [128, 128, 512]),
-    IDBlock((3, 3), [128, 128, 512]),
-    ConvBlock((3, 3), [256, 256, 1024]),
-    IDBlock((3, 3), [256, 256, 1024]),
-    IDBlock((3, 3), [256, 256, 1024]),
-    IDBlock((3, 3), [256, 256, 1024]),
-    IDBlock((3, 3), [256, 256, 1024]),
-    IDBlock((3, 3), [256, 256, 1024]),
-    ConvBlock((3, 3), [512, 512, 2048]),
-    IDBlock((3, 3), [512, 512, 2048]),
-    IDBlock((3, 3), [512, 512, 2048]),
+    ConvBlock((3, 3), [64, 64, 64, 256], strides=(1, 1)),
+    IDBlock((3, 3), [256, 64, 64, 256]),
+    IDBlock((3, 3), [256, 64, 64, 256]),
+    ConvBlock((3, 3), [256, 128, 128, 512]),
+    IDBlock((3, 3), [512, 128, 128, 512]),
+    IDBlock((3, 3), [512, 128, 128, 512]),
+    IDBlock((3, 3), [512, 128, 128, 512]),
+    ConvBlock((3, 3), [512, 256, 256, 1024]),
+    IDBlock((3, 3), [1024, 256, 256, 1024]),
+    IDBlock((3, 3), [1024, 256, 256, 1024]),
+    IDBlock((3, 3), [1024, 256, 256, 1024]),
+    IDBlock((3, 3), [1024, 256, 256, 1024]),
+    IDBlock((3, 3), [1024, 256, 256, 1024]),
+    ConvBlock((3, 3), [1024, 512, 512, 2048]),
+    IDBlock((3, 3), [2048, 512, 512, 2048]),
+    IDBlock((3, 3), [2048, 512, 512, 2048]),
     x -> meanpool(x, (7, 7)),
     x -> reshape(x, :, size(x, 4)),
-    Dense(512, NUM_CLASSES, softmax),
+    Dense(2048, NUM_CLASSES),
+    softmax
 ) |> gpu
-
 
