@@ -1,3 +1,4 @@
 julia 1.0
 DecisionTree 0.8.1
 ScikitLearn 0.5.0
+Flux 0.6.9
