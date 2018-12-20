@@ -3,3 +3,13 @@ julia:
   - nightly
   - 1.0
   - 1.0.2
+  
+notifications:
+    email: false
+
+branches:
+  only:
+    - master
+
+after_success: 
+  - codecov
