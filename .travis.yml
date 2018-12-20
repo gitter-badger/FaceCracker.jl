@@ -1,9 +1,12 @@
 language: julia
 julia:
-  - nightly
-  - 1.0
   - 1.0.2
+  - nightly
   
+matrix:
+  allow_failures:
+    - julia: nightly
+
 notifications:
     email: false
 
@@ -11,5 +14,6 @@ branches:
   only:
     - master
 
+codecov: true
 after_success: 
   - julia -e 'cd(Pkg.dir("FaceCracker")); Pkg.add("Coverage"); using Coverage; Codecov.submit(Codecov.process_folder())'
