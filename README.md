@@ -1,5 +1,5 @@
 # FaceCraker Package for Julia
-[![Build Status](https://api.travis-ci.org/fetaxyu/DeepToolKit.jl.svg?branch=master)](https://travis-ci.org/fetaxyu/DeepToolKit.jl/builds/467467916)
+[![Build Status](https://travis-ci.org/fetaxyu/FaceCracker.jl.svg?branch=master)](https://travis-ci.org/fetaxyu/FaceCracker.jl/builds/470319497)
 
 ## Installation
 on the Julia console. To install the latest development version, run the following command instead:
