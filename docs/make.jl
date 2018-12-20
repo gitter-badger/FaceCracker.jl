@@ -1,10 +1,10 @@
 # This file is a part of DeepToolKit. License is MIT
 
-using Documenter, DeepToolKit
+using Documenter, FaceCraker
 
 makedocs(
-	modules = [DeepToolKit],
-	sitename = "DeepToolKit.jl",
+	modules = [FaceCraker],
+	sitename = "FaceCraker.jl",
 	pages = Any[
 	  "index.md"
 	],
@@ -13,5 +13,5 @@ makedocs(
 )
 
 deploydocs(
-	repo = "github.com/fetaxyu/DeepToolKit.jl",
+	repo = "github.com/fetaxyu/FaceCraker.jl",
 )
