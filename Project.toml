@@ -1,12 +1,13 @@
-name = "FaceCraker"
-uuid = "468dec62-fe9e-11e8-0849-697a5da5c1b9"
-authors = ["fetaxyu "]
+name = "FaceCracker"
+uuid = "934cf250-0402-11e9-0867-71cc1fe4fc0a"
+authors = ["fetaxyu <fetaxyu@gmail.com>"]
 version = "0.1.0"
 
 [deps]
+Dates = "ade2ca70-3891-5945-98fb-dc099432e06a"
 DecisionTree = "7806a523-6efd-50cb-b5f6-3fa6f1930dbb"
+Flux = "587475ba-b771-5e3f-ad9e-33799f191a9c"
 PyPlot = "d330b81b-6aea-500a-939a-2ce795aea3ee"
-Random = "9a3f8284-a2c9-5f02-9a11-845980a1fd5c"
 ScikitLearn = "3646fa90-6ef7-5e7e-9f22-8aca16db6324"
 
 [extras]

@@ -17,9 +17,9 @@ include("config.jl")
 Returns the block model.
 """
 function identity_block(kernel_size, filters)
-    _, filter1, filter2, filter3 = filters
+    filter0, filter1, filter2, filter3 = filters
     Chain(
-        Conv((1, 1), _=>filter1), 
+        Conv((1, 1), filter0=>filter1), 
         BatchNorm(filter1),
         x -> relu.(x),
         Conv(kernel_size, filter1=>filter2, pad=(1, 1)),
@@ -53,9 +53,9 @@ end
 Returns block model.
 """
 function plain_model(kernel_size, filters; strides=(2, 2))
-    _, filter1, filter2, filter3 = filters
+    filter0, filter1, filter2, filter3 = filters
     Chain(
-        Conv((1, 1), _=>filter1, stride=strides),
+        Conv((1, 1), filter0=>filter1, stride=strides),
         BatchNorm(filter1),
         x -> relu.(x),
         Conv(kernel_size, filter1=>filter2, pad=(1, 1)),
@@ -74,7 +74,7 @@ struct ConvBlock
     shortcut::Chain
     ConvBlock(kernel_size, filters; strides=(2, 2)) = new(kernel_size, filters, strides, 
         plain_model(kernel_size, filters, strides=strides), 
-        Chain(Conv((1, 1), filter[2]=>filters[4], stride=strides), BatchNorm(filters[4])) |> gpu)
+        Chain(Conv((1, 1), filters[2]=>filters[4], stride=strides), BatchNorm(filters[4])) |> gpu)
 end
 
 function (cb::ConvBlock)(x)
