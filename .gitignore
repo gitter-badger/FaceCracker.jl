@@ -5,3 +5,5 @@
 /docs/Manifest.toml
 Manifest.toml
 *.log
+/.vscode
+/resources
