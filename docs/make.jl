@@ -1,4 +1,4 @@
-# This file is a part of DeepToolKit. License is MIT
+# This file is a part of FaceCraker. License is MIT
 
 using Documenter, FaceCraker
 
